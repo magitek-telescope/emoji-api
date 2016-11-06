@@ -2,8 +2,12 @@
 
 json=$(node ./bin/getjson)
 len=$(echo $json | jq ".data | length")
+mkdir docs/v1
 for i in $( seq 0 $(($len - 1)) ); do
     row=$(echo $json | jq .data[$i])
     name=$(echo $row | jq .name | sed -e "s/://g" | sed -e "s/\"//g")
     $(echo $row | jq . > docs/v1/$name.json)
+
+    P=`expr $i \* 100 / $len`
+    echo -en "Generating... $i/$len $P% \r"
 done

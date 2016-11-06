@@ -1,0 +1,9 @@
+#!/bin/bash
+
+json=$(node ./bin/getjson)
+len=$(echo $json | jq ".data | length")
+for i in $( seq 0 $(($len - 1)) ); do
+    row=$(echo $json | jq .data[$i])
+    name=$(echo $row | jq .name | sed -e "s/://g" | sed -e "s/\"//g")
+    $(echo $row | jq . > docs/v1/$name.json)
+done

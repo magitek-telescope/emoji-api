@@ -7,7 +7,8 @@
     "doc": "docs"
   },
   "scripts": {
-    "start": "node src/server.js",
+    "host": "node src/server.js",
+    "generate": "./bin/generate",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

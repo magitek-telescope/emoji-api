@@ -7,11 +7,12 @@ len=$(echo $json | jq ".data | length")
 # Re generate setting
 rm -Rf docs/v1
 mkdir docs/v1
+mkdir docs/v1/emojis
 
 for i in $( seq 0 $(($len - 1)) ); do
     row=$(echo $json | jq .data[$i])
     name=$(echo $row | jq .name | sed -e "s/://g" | sed -e "s/\"//g")
-    $(echo $row | jq . > docs/v1/$name.json)
+    $(echo $row | jq . > docs/v1/emojis/$name.json)
 
     B=""
     P=$(($i * 100 / $len))
@@ -20,11 +21,16 @@ for i in $( seq 0 $(($len - 1)) ); do
     do
         B="$B="
     done
-    
-    for _ in $( seq 0 $((50 - $P / 2)) )
+
+    B="$B>"
+
+    for _ in $( seq 0 $((49 - $P / 2)) )
     do
         B="$B "
     done
 
-    echo -en " Generating... [$B] $i/$len \r"
+    echo -en " Generating... [$B] $(($i+1))/$len \r"
 done
+
+$(echo $json | jq . > docs/v1/index.json)
+echo ""

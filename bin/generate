@@ -1,13 +1,30 @@
 #!/bin/bash
 
+# Read Source
 json=$(node ./bin/getjson)
 len=$(echo $json | jq ".data | length")
+
+# Re generate setting
+rm -Rf docs/v1
 mkdir docs/v1
+
 for i in $( seq 0 $(($len - 1)) ); do
     row=$(echo $json | jq .data[$i])
     name=$(echo $row | jq .name | sed -e "s/://g" | sed -e "s/\"//g")
     $(echo $row | jq . > docs/v1/$name.json)
 
-    P=`expr $i \* 100 / $len`
-    echo -en "Generating... $i/$len $P% \r"
+    B=""
+    P=$(($i * 100 / $len))
+
+    for _ in $( seq 0 $(($P / 2)) )
+    do
+        B="$B="
+    done
+    
+    for _ in $( seq 0 $((50 - $P / 2)) )
+    do
+        B="$B "
+    done
+
+    echo -en " Generating... [$B] $i/$len \r"
 done
